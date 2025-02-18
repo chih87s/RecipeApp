@@ -33,6 +33,9 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +49,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.db.recipeapp.core.data.local.RecipeUIModel
 import com.db.recipeapp.ui.theme.ColesRed
+import com.db.recipeapp.ui.viewmodels.SnackBarViewModel
+
 
 private val HzPadding = 16.dp
 private val BorderPadding = 8.dp
@@ -97,9 +102,11 @@ fun RecipeItem(
     modifier: Modifier = Modifier,
     recipe: RecipeUIModel,
     onClick: (RecipeUIModel) -> Unit,
+    snackBarViewModel: SnackBarViewModel
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
+
     Box(
         modifier = modifier
             .width(screenWidth)
@@ -113,14 +120,14 @@ fun RecipeItem(
             modifier = Modifier,
             horizontalAlignment = Alignment.Start
         ) {
-            AsyncImage(
-                model = recipe.thumbnailUrl,
+            ImageWithErrorSnackBar(
+                imageUrl = recipe.thumbnailUrl,
                 contentDescription = recipe.title,
+                snackBarViewModel = snackBarViewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(CardImageSize)
-                    .testTag("RecipeImage"),
-                contentScale = ContentScale.Crop
+                    .testTag("RecipeImage")
             )
             Spacer(modifier = Modifier.height(BorderPadding))
             Text(
@@ -145,7 +152,8 @@ fun RecipeItem(
 @Composable
 fun RecipeList(
     recipes: List<RecipeUIModel>,
-    onRecipeClick: (RecipeUIModel) -> Unit
+    onRecipeClick: (RecipeUIModel) -> Unit,
+    snackBarViewModel: SnackBarViewModel
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
@@ -157,7 +165,7 @@ fun RecipeList(
         modifier = Modifier.fillMaxSize()
     ) {
         items(recipes) { recipe ->
-            RecipeItem(recipe = recipe, onClick = onRecipeClick)
+            RecipeItem(recipe = recipe, onClick = onRecipeClick, snackBarViewModel = snackBarViewModel)
         }
     }
 }
@@ -193,13 +201,16 @@ fun RecipeDetailImage(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .height(DetailsImageSize)
-        .padding(BorderPadding), imageUrl: String
+        .padding(BorderPadding),
+    imageUrl: String,
+    contentDescription: String,
+
 ) {
     AsyncImage(
         model = imageUrl,
-        contentDescription = null,
-        modifier = modifier,
-        contentScale = ContentScale.Crop
+        contentDescription = contentDescription,
+        modifier =  modifier.testTag("RecipeDetailImage"),
+        contentScale = ContentScale.Crop,
     )
 }
 
@@ -297,6 +308,27 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
         }
     }
 }
+
+@Composable
+fun ImageWithErrorSnackBar(
+    imageUrl: String?,
+    contentDescription: String,
+    snackBarViewModel: SnackBarViewModel,
+    modifier: Modifier = Modifier
+) {
+
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+        onError = {
+            snackBarViewModel.showErrorMessage("Failed to load image")
+        }
+    )
+
+}
+
 
 //
 //@Preview(showBackground = true)
