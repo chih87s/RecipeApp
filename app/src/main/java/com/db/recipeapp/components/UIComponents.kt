@@ -126,11 +126,13 @@ fun RecipeItem(
             ImageWithErrorSnackBar(
                 imageUrl = recipe.thumbnailUrl,
                 contentDescription = recipe.title,
-                snackBarViewModel = snackBarViewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(CardImageSize)
-                    .testTag("RecipeImage")
+                    .testTag("RecipeImage"),
+                onError = {
+                    snackBarViewModel.showErrorMessage(it)
+                }
             )
             Spacer(modifier = Modifier.height(BorderPadding))
             Text(
@@ -340,8 +342,8 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
 fun ImageWithErrorSnackBar(
     imageUrl: String?,
     contentDescription: String,
-    snackBarViewModel: SnackBarViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onError: (String) -> Unit
 ) {
 
     AsyncImage(
@@ -350,7 +352,7 @@ fun ImageWithErrorSnackBar(
         modifier = modifier,
         contentScale = ContentScale.Crop,
         onError = {
-            snackBarViewModel.showErrorMessage("Failed to load image")
+            onError("Failed to load image")
         }
     )
 
