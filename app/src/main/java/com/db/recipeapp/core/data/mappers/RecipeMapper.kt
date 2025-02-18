@@ -12,6 +12,7 @@ class RecipeMapper {
                 title = recipe.dynamicTitle,
                 description = recipe.dynamicDescription,
                 thumbnailUrl = Constants.IMAGE_PREFIX + recipe.dynamicThumbnail,
+                amountLabel = recipe.recipeDetails.amountNumber,
                 prepTime = recipe.recipeDetails.prepTime,
                 cookingTime = recipe.recipeDetails.cookingTime,
                 ingredients = recipe.ingredients.map { it.ingredient }

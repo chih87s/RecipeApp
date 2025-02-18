@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.db.recipeapp.components.RecipeTopBar
 import com.db.recipeapp.constants.MainDestinations
+import com.db.recipeapp.ui.navigation.recipeNavGraph
 import com.db.recipeapp.ui.theme.RecipeAppTheme
 import com.db.recipeapp.ui.views.MainRecipeScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,13 +45,20 @@ class MainActivity : ComponentActivity() {
 fun RecipeApp(){
     RecipeAppTheme {
         val mNavController = rememberNavController()
-        val topBarTitle = topBarTitleHandler(navController = mNavController)
         val scaffoldSnackBarHostState = remember { SnackbarHostState() }
+
+        val currentBackStackEntry by mNavController.currentBackStackEntryAsState()
+        val currentRoute = currentBackStackEntry?.destination?.route
+
 
         Scaffold(
             topBar = {
-                RecipeTopBar(title = topBarTitle)
-            },
+                RecipeTopBar(
+                    title = topBarTitleHandler(currentRoute),
+                    onBackClick = if (currentRoute?.startsWith(MainDestinations.RecipeDetails.route) == true) {
+                        { mNavController.popBackStack() }
+                    } else null
+                )            },
             snackbarHost = { SnackbarHost(hostState = scaffoldSnackBarHostState) }
         ) { paddingValues ->
 
@@ -58,12 +67,10 @@ fun RecipeApp(){
                 startDestination = MainDestinations.MainRecipe.route,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                composable(route = MainDestinations.MainRecipe.route) {
-                    MainRecipeScreen(onRecipeTap = {},scaffoldSnackBarHostState = scaffoldSnackBarHostState)
-                }
-                composable(route = MainDestinations.RecipeDetails.route) {
-
-                }
+                recipeNavGraph(
+                    navController = mNavController,
+                    scaffoldSnackBarHostState = scaffoldSnackBarHostState
+                )
             }
         }
 
@@ -71,12 +78,10 @@ fun RecipeApp(){
 }
 
 @Composable
-fun topBarTitleHandler(navController: NavController): String {
-    val currentDestination = navController.currentBackStackEntryAsState()
-
-    return when (currentDestination.value?.destination?.route) {
-        MainDestinations.MainRecipe.route -> "Recipes"
-        MainDestinations.RecipeDetails.route -> "Details"
-        else -> "Recipes"
+fun topBarTitleHandler(route: String?): String {
+    return when {
+        route?.startsWith(MainDestinations.MainRecipe.route) == true -> "Recipe"
+        route?.startsWith(MainDestinations.RecipeDetails.route) == true -> "Details"
+        else -> "Recipe"
     }
 }

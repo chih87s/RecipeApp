@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.org.kotlin.ksp)
+    alias(libs.plugins.kotlinx.serialization)
+
 }
 
 android {
@@ -69,4 +71,7 @@ dependencies {
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.dagger.hilt.navigation)
+
+    //serialization
+    implementation(libs.kotlinx.serialization.json)
 }

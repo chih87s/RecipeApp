@@ -1,12 +1,16 @@
 package com.db.recipeapp.ui.views
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.db.recipeapp.components.RecipeList
 import com.db.recipeapp.core.data.local.RecipeUIModel
@@ -27,15 +31,20 @@ fun MainRecipeScreen(
         viewModel.getRecipes()
     }
 
-    when(val state = recipeState.value){
+    when (val state = recipeState.value) {
         is RecipeUiState.Loading -> {
-            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-        }
-        is RecipeUiState.Success ->{
-            RecipeList(state.recipes) { }
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            }
         }
 
-        is RecipeUiState.Error ->{
+        is RecipeUiState.Success -> {
+            RecipeList(state.recipes) {
+                onRecipeTap(it)
+            }
+        }
+
+        is RecipeUiState.Error -> {
             LaunchedEffect(state.errorMessage) {
                 scaffoldSnackBarHostState.showSnackbar(state.errorMessage)
             }
