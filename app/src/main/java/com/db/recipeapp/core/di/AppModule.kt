@@ -20,8 +20,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideJsonParser(@ApplicationContext context: Context): JsonParser {
-        return JsonParser(context)
+    fun provideJsonParser(): JsonParser {
+        return JsonParser()
     }
 
     @Provides

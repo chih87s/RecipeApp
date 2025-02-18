@@ -1,0 +1,15 @@
+{
+  "recipes": [
+    {
+      "dynamicTitle": "Apple Pie",
+      "dynamicDescription": "Delicious apple pie.",
+      "dynamicThumbnail": "apple_pie.jpg",
+      "recipeDetails": {
+        "amountLabel": "2 servings",
+        "amountNumber": 2,
+        "prepLabel": "Prep Time",
+        "prepTime": "10 min"
+      }
+    }
+  ]
+}

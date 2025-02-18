@@ -7,12 +7,14 @@ import java.io.IOException
 import java.io.InputStreamReader
 import javax.inject.Inject
 
-class JsonParser @Inject constructor(private val context: Context) {
+class JsonParser @Inject constructor() {
 
     fun <T> parseJsonFromFile(fileName: String, classOfT: Class<T>): T {
 
         return try {
-            val inputStream = context.assets.open(fileName)
+            val inputStream = javaClass.classLoader?.getResourceAsStream(fileName)
+                ?: throw RuntimeException("File not found: $fileName")
+
             InputStreamReader(inputStream).use { reader ->
                 Gson().fromJson(reader, classOfT)
             }

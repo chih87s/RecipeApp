@@ -1,0 +1,25 @@
+{
+  "recipes": [
+    {
+      "dynamicTitle": "Apple Pie",
+      "dynamicDescription": "Delicious apple pie.",
+      "dynamicThumbnail": "apple_pie.jpg",
+      "recipeDetails": {
+        "amountLabel": "2 servings",
+        "amountNumber": 2,
+        "prepLabel": "Prep Time",
+        "prepTime": "10 min",
+        "prepNote": "Use fresh apples.",
+        "cookingLabel": "Cook Time",
+        "cookingTime": "40 min",
+        "cookTimeAsMinutes": 40,
+        "prepTimeAsMinutes": 10
+      },
+      "ingredients": [
+        {
+          "ingredient": "Apple"
+        }
+      ]
+    }
+  ]
+}
