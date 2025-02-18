@@ -18,12 +18,18 @@ class RecipeViewModel @Inject constructor(
     private val _recipesData = MutableStateFlow<RecipeUiState>((RecipeUiState.Loading))
     val recipesState: StateFlow<RecipeUiState> = _recipesData
 
+    private val _isDataLoaded = MutableStateFlow(false)
+    val isDataLoaded: StateFlow<Boolean> = _isDataLoaded
 
     fun getRecipes(){
         viewModelScope.launch {
+            if (_isDataLoaded.value) return@launch
             recipeUseCase.getFilteredAndSortedRecipes().collect{result ->
                 _recipesData.value = when (result.isSuccess) {
-                    true -> RecipeUiState.Success(result.getOrNull() ?: emptyList())
+                    true -> {
+                        _isDataLoaded.value = true
+                        RecipeUiState.Success(result.getOrNull() ?: emptyList())
+                    }
                     false -> RecipeUiState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
                 }
             }

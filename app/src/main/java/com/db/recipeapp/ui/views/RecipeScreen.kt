@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.db.recipeapp.components.RecipeList
@@ -28,19 +29,18 @@ fun MainRecipeScreen(
 ) {
 
     val recipeState = viewModel.recipesState.collectAsState()
-    val isDataLoaded = remember { mutableStateOf(false) }
+    val isDataLoaded = viewModel.isDataLoaded.collectAsState()
 
     LaunchedEffect(isDataLoaded.value) {
         if (!isDataLoaded.value) {
             viewModel.getRecipes()
-            isDataLoaded.value = true
         }
     }
 
     when (val state = recipeState.value) {
         is RecipeUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(modifier = Modifier.size(48.dp))
+                CircularProgressIndicator(modifier = Modifier.size(48.dp).testTag("LoadingIndicator"))
             }
         }
 

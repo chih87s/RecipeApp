@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.db.recipeapp.R
 import com.db.recipeapp.core.data.local.RecipeUIModel
 import com.db.recipeapp.ui.theme.CardBackground
 import com.db.recipeapp.ui.theme.ColesRed
@@ -111,6 +113,7 @@ fun RecipeItem(
             .height(220.dp)
             .padding(BorderPadding)
             .background(CardBackground)
+            .testTag("RecipeItem")
     ) {
         Column(
             modifier = Modifier
@@ -131,7 +134,7 @@ fun RecipeItem(
             )
             Spacer(modifier = Modifier.height(BorderPadding))
             Text(
-                text = "Recipe",
+                text = stringResource(R.string.recipe),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -167,7 +170,8 @@ fun RecipeList(
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
         contentPadding = PaddingValues(HzPadding),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         items(recipes, key = { it.title }) { recipe ->
             RecipeItem(
