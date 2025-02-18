@@ -20,11 +20,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,9 +32,6 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.db.recipeapp.core.data.local.RecipeUIModel
+import com.db.recipeapp.ui.theme.CardBackground
 import com.db.recipeapp.ui.theme.ColesRed
 import com.db.recipeapp.ui.viewmodels.SnackBarViewModel
 
@@ -110,20 +105,19 @@ fun RecipeItem(
     onClick: (RecipeUIModel) -> Unit,
     snackBarViewModel: SnackBarViewModel
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
 
     Box(
         modifier = modifier
-            .width(screenWidth)
             .height(220.dp)
             .padding(BorderPadding)
-            .clickable {
-                onClick(recipe)
-            },
+            .background(CardBackground)
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable {
+                    onClick(recipe)
+                },
             horizontalAlignment = Alignment.Start
         ) {
             ImageWithErrorSnackBar(
@@ -139,7 +133,9 @@ fun RecipeItem(
             Text(
                 text = "Recipe",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Recipe label" },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = "Recipe label" },
                 color = Color.Red,
                 textAlign = TextAlign.Start
             )
@@ -148,7 +144,9 @@ fun RecipeItem(
                 text = recipe.title,
                 maxLines = 2,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth().semantics { contentDescription = recipe.title }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = recipe.title }
             )
         }
     }
@@ -165,19 +163,23 @@ fun RecipeList(
     val screenWidth = configuration.screenWidthDp.dp
 
     val columns = if (screenWidth < 600.dp) 2 else 3
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
         contentPadding = PaddingValues(HzPadding),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(recipes) { recipe ->
+        items(recipes, key = { it.title }) { recipe ->
             RecipeItem(
+                modifier = Modifier.width(screenWidth),
                 recipe = recipe,
-                onClick = onRecipeClick,
+                onClick = { onRecipeClick(recipe) },
                 snackBarViewModel = snackBarViewModel
             )
         }
     }
+
+
 }
 
 @Composable
@@ -202,7 +204,9 @@ fun RecipeDetailDescription(description: String) {
     Text(
         text = description,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(HzPadding).semantics { contentDescription = description },
+        modifier = Modifier
+            .padding(HzPadding)
+            .semantics { contentDescription = description },
         textAlign = TextAlign.Center
     )
 }
@@ -275,7 +279,9 @@ fun InfoItem(label: String, value: String, modifier: Modifier = Modifier) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 4.dp).semantics { contentDescription = label }
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .semantics { contentDescription = label }
         )
         Text(
             text = value,
@@ -296,7 +302,9 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
             fontSize = 28.sp,
             letterSpacing = 2.sp
         ),
-        modifier = Modifier.padding(horizontal = BorderPadding, vertical = HzPadding).semantics { contentDescription = "Ingredients" }
+        modifier = Modifier
+            .padding(horizontal = BorderPadding, vertical = HzPadding)
+            .semantics { contentDescription = "Ingredients" }
     )
 
     Column {
@@ -314,7 +322,9 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
                 Text(
                     text = ingredient,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(end = 4.dp).semantics { contentDescription = ingredient }
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .semantics { contentDescription = ingredient }
                 )
             }
             Spacer(Modifier.size(8.dp))
