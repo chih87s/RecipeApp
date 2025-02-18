@@ -21,7 +21,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,6 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -73,7 +77,9 @@ fun RecipeTopBar(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = HzPadding)
+                modifier = Modifier
+                    .padding(start = HzPadding)
+                    .semantics { contentDescription = "Top Bar" },
             )
         },
         colors = colors ?: TopAppBarDefaults.topAppBarColors(
@@ -82,12 +88,12 @@ fun RecipeTopBar(
         ),
         navigationIcon = {
             onBackClick?.let {
-                IconButton(onClick = it, modifier = Modifier.size(40.dp)) {
+                IconButton(onClick = it, modifier = Modifier.size(48.dp)) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "Back",
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Back Button",
                         tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }
@@ -133,7 +139,7 @@ fun RecipeItem(
             Text(
                 text = "Recipe",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Recipe label" },
                 color = Color.Red,
                 textAlign = TextAlign.Start
             )
@@ -142,7 +148,7 @@ fun RecipeItem(
                 text = recipe.title,
                 maxLines = 2,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = recipe.title }
             )
         }
     }
@@ -165,7 +171,11 @@ fun RecipeList(
         modifier = Modifier.fillMaxSize()
     ) {
         items(recipes) { recipe ->
-            RecipeItem(recipe = recipe, onClick = onRecipeClick, snackBarViewModel = snackBarViewModel)
+            RecipeItem(
+                recipe = recipe,
+                onClick = onRecipeClick,
+                snackBarViewModel = snackBarViewModel
+            )
         }
     }
 }
@@ -181,7 +191,8 @@ fun RecipeDetailTitle(title: String) {
         ),
         modifier = Modifier
             .padding(vertical = BorderPadding, horizontal = HzPadding)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .semantics { contentDescription = title },
         textAlign = TextAlign.Center
     )
 }
@@ -191,7 +202,7 @@ fun RecipeDetailDescription(description: String) {
     Text(
         text = description,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(HzPadding),
+        modifier = Modifier.padding(HzPadding).semantics { contentDescription = description },
         textAlign = TextAlign.Center
     )
 }
@@ -205,11 +216,11 @@ fun RecipeDetailImage(
     imageUrl: String,
     contentDescription: String,
 
-) {
+    ) {
     AsyncImage(
         model = imageUrl,
         contentDescription = contentDescription,
-        modifier =  modifier.testTag("RecipeDetailImage"),
+        modifier = modifier.testTag("RecipeDetailImage"),
         contentScale = ContentScale.Crop,
     )
 }
@@ -264,11 +275,13 @@ fun InfoItem(label: String, value: String, modifier: Modifier = Modifier) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp).semantics { contentDescription = label }
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.ExtraBold)
+            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.ExtraBold),
+            modifier = Modifier.semantics { contentDescription = value }
+
         )
     }
 }
@@ -283,7 +296,7 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
             fontSize = 28.sp,
             letterSpacing = 2.sp
         ),
-        modifier = Modifier.padding(horizontal = BorderPadding, vertical = HzPadding)
+        modifier = Modifier.padding(horizontal = BorderPadding, vertical = HzPadding).semantics { contentDescription = "Ingredients" }
     )
 
     Column {
@@ -301,7 +314,7 @@ fun RecipeDetailIngredients(ingredients: List<String>) {
                 Text(
                     text = ingredient,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp).semantics { contentDescription = ingredient }
                 )
             }
             Spacer(Modifier.size(8.dp))
