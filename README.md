@@ -24,15 +24,25 @@ To set up the development environment, make sure you have the following installe
 
 ## Features
 - 🚀 **Kotlin as the language**: The app is developed using Kotlin, taking full advantage of Kotlin's features and benefits.
+
 - 🏗️ **Modern Architecture Practices**: Follows clean architecture, implementing the MVVM pattern to manage UI and data
+
 - 🎨 **Jetpack Compose**: The UI is built using Jetpack Compose, offering a clean and efficient way to build UIs.
+
 - 🔄 **Coroutines**: Kotlin Coroutines are used for handling asynchronous tasks.
+
 - 🧳 **Modular Navigation**: The app’s navigation logic is split into its own module, making it easier to test and maintain.
+
 - ⚠️ **Error Snackbar**: Displays a Snackbar with an error message in case of failure.
+
 - 🔄 **Orientation Support**: The app adjusts UI layouts based on the screen orientation, providing different views for portrait and landscape modes.
+
 - 🔌 **Hilt/Dagger2**: Uses Hilt for dependency injection, simplifying component management and testing.
+
 - 🧭 **Navigation Component**: Navigation Component is used for handling screen navigation and data passing.
+
 - 🧪 **Unit Testing**: The app includes unit tests for ViewModel and UseCase, ensuring code reliability.
+
 - ♿  **Accessibility**:  The app is optimized for accessibility, ensuring that visually impaired users can interact with the app, with appropriate content descriptions for UI elements.
 
 ## Screenshots
@@ -52,6 +62,9 @@ The **Project** employs a **MVVM (Model-View-ViewModel) Clean Architecture** pat
     -**Mapper**: Convert remote model to ui model
 
 ## Future Enhancements
+
+- **Decoupling UI and ViewModel**: Adopt an event-driven approach for handling one-time UI effects like snackbar and dialogs.
+
 - **Error Category Handling**: Enhance error handling strategy to differentiate between different types of error.
 
 - **Pagination Function**: Implementing pagination for loading lists of data incrementally. This would improve performance and provide a smoother experience for users when dealing with large datasets (like recipes)
