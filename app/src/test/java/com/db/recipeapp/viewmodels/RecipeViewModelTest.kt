@@ -24,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
 class RecipeViewModelTest {
 
@@ -32,10 +33,8 @@ class RecipeViewModelTest {
     @MockK
     private lateinit var recipeUseCase: RecipeUseCase
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -44,8 +43,6 @@ class RecipeViewModelTest {
         recipeViewModel = RecipeViewModel(recipeUseCase)
     }
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()

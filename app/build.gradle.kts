@@ -42,6 +42,13 @@ android {
         compose = true
     }
 
+    packaging {
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/LICENSE-notice.md")
+        resources.excludes.add("META-INF/LICENSE")
+    }
+
 }
 
 dependencies {
@@ -83,7 +90,8 @@ dependencies {
     androidTestImplementation(libs.mockito.kotlin)
 
     testImplementation(libs.mockk)
-
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
     testImplementation(libs.kotlinx.coroutines.test)
 
 }
