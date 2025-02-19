@@ -47,8 +47,11 @@ fun MainRecipeScreen(
         is RecipeUiState.Success -> {
             RecipeList(
                 recipes = state.recipes,
-                snackBarViewModel = snackBarViewModel,
-                onRecipeClick = { onRecipeTap(it) })
+                onRecipeClick = { onRecipeTap(it) },
+                showErrorMessage = {
+                    snackBarViewModel.showErrorMessage(it)
+                }
+            )
         }
 
         is RecipeUiState.Error -> {

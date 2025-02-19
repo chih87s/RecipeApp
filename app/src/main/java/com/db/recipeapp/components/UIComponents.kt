@@ -105,7 +105,7 @@ fun RecipeItem(
     modifier: Modifier = Modifier,
     recipe: RecipeUIModel,
     onClick: (RecipeUIModel) -> Unit,
-    snackBarViewModel: SnackBarViewModel
+    showErrorMessage:(String) -> Unit,
 ) {
 
     Box(
@@ -131,7 +131,7 @@ fun RecipeItem(
                     .height(CardImageSize)
                     .testTag("RecipeImage"),
                 onError = {
-                    snackBarViewModel.showErrorMessage(it)
+                    showErrorMessage(it)
                 }
             )
             Spacer(modifier = Modifier.height(BorderPadding))
@@ -162,7 +162,7 @@ fun RecipeItem(
 fun RecipeList(
     recipes: List<RecipeUIModel>,
     onRecipeClick: (RecipeUIModel) -> Unit,
-    snackBarViewModel: SnackBarViewModel
+    showErrorMessage: (String) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
@@ -180,7 +180,9 @@ fun RecipeList(
                 modifier = Modifier.width(screenWidth),
                 recipe = recipe,
                 onClick = { onRecipeClick(recipe) },
-                snackBarViewModel = snackBarViewModel
+                showErrorMessage = {
+                    showErrorMessage(it)
+                }
             )
         }
     }

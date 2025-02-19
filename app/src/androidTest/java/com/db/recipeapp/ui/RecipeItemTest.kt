@@ -28,8 +28,6 @@ class RecipeItemTest {
     @MockK
     lateinit var snackBarViewModel: SnackBarViewModel
 
-    private val snackBarStateFlow = MutableStateFlow<SnackBarMessage>(SnackBarMessage.Idle)
-
     private val testRecipe = RecipeUIModel(
         title = "Apple Pie",
         description = "Delicious apple pie.",
@@ -53,7 +51,7 @@ class RecipeItemTest {
             RecipeItem(
                 recipe = testRecipe,
                 onClick = {},
-                snackBarViewModel = snackBarViewModel
+                showErrorMessage = {}
             )
         }
 
@@ -66,20 +64,5 @@ class RecipeItemTest {
 
     }
 
-    @Test
-    fun testSnackBarIsDisplayedWhenImageFails() {
-        snackBarStateFlow.value = SnackBarMessage.Error("Failed to load image")
-        coEvery { snackBarViewModel.snackBarMessage } returns snackBarStateFlow
-
-        composeTestRule.setContent {
-            RecipeItem(
-                recipe = testRecipe,
-                onClick = {},
-                snackBarViewModel = snackBarViewModel
-            )
-        }
-
-        composeTestRule.onNodeWithText("Failed to load image").assertDoesNotExist()
-    }
 
 }
