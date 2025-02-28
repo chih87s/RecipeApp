@@ -8,15 +8,18 @@ class RecipeMapper {
 
     fun mapToUIModel(response: RecipeResponse): List<RecipeUIModel> {
         return response.recipes.map { recipe ->
-            RecipeUIModel(
-                title = recipe.dynamicTitle,
-                description = recipe.dynamicDescription,
-                thumbnailUrl = Constants.IMAGE_PREFIX + recipe.dynamicThumbnail,
-                amountLabel = recipe.recipeDetails.amountNumber,
-                prepTime = recipe.recipeDetails.prepTime,
-                cookingTime = recipe.recipeDetails.cookingTime,
-                ingredients = recipe.ingredients.map { it.ingredient }
-            )
+            with(recipe){
+                RecipeUIModel(
+                    title = dynamicTitle,
+                    description = dynamicDescription,
+                    thumbnailUrl = Constants.IMAGE_PREFIX + dynamicThumbnail,
+                    amountLabel = recipeDetails.amountNumber,
+                    prepTime = recipeDetails.prepTime,
+                    cookingTime = recipeDetails.cookingTime,
+                    ingredients = ingredients.map { it.ingredient }
+                )
+            }
+
         }
     }
 }

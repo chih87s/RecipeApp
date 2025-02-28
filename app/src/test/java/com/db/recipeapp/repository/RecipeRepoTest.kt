@@ -4,6 +4,7 @@ import com.db.recipeapp.core.data.remote.IngredientResponse
 import com.db.recipeapp.core.data.remote.Recipe
 import com.db.recipeapp.core.data.remote.RecipeDetails
 import com.db.recipeapp.core.data.remote.RecipeResponse
+import com.db.recipeapp.core.data.repositories.RecipeDataSource
 import com.db.recipeapp.core.data.repositories.RecipeRepo
 import com.db.recipeapp.core.data.repositories.RecipeRepoImpl
 import com.db.recipeapp.helper.JsonParser
@@ -16,10 +17,12 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
+
 class RecipeRepoTest {
 
+
     @Mock
-    private lateinit var jsonParser: JsonParser
+    private lateinit var localDataSource: RecipeDataSource
 
     private lateinit var recipeRepo: RecipeRepo
 
@@ -27,7 +30,7 @@ class RecipeRepoTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        recipeRepo = RecipeRepoImpl(jsonParser)
+        recipeRepo = RecipeRepoImpl(localDataSource)
     }
 
     @Test
@@ -54,8 +57,7 @@ class RecipeRepoTest {
             )
         )
 
-        `when`(jsonParser.parseJsonFromFile("recipesSample.json", RecipeResponse::class.java))
-            .thenReturn(expectedResponse)
+        `when`(localDataSource.getRecipes()).thenReturn(expectedResponse)
 
         val result = recipeRepo.getRecipes().first()
 
@@ -69,10 +71,7 @@ class RecipeRepoTest {
     fun `test getRecipes failure`() = runBlocking {
         val exception = RuntimeException("File not found")
         `when`(
-            jsonParser.parseJsonFromFile(
-                "recipesSample.json",
-                RecipeResponse::class.java
-            )
+            localDataSource.getRecipes()
         ).thenThrow(exception)
 
         val resultFlow = recipeRepo.getRecipes().first()

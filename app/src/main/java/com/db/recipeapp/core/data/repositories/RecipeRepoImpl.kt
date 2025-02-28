@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class RecipeRepoImpl @Inject constructor(
-    private val jsonParser: JsonParser
+    private val recipeDataSource: RecipeDataSource
 ) : RecipeRepo {
     override suspend fun getRecipes(): Flow<Result<RecipeResponse>> {
         return flow {
             try {
-                val res = jsonParser.parseJsonFromFile("recipesSample.json", RecipeResponse::class.java)
+                val res = recipeDataSource.getRecipes()
                 emit(Result.success(res))
             }catch (e:Exception){
                 emit(Result.failure(e))
